@@ -1,10 +1,10 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { article } from "../types/article";
+import { Article } from "../types/article";
 
 export type RootStackParamList = {
     Home: undefined;
-    Article: { article: article },
+    Article: { article: Article },
     Test: undefined,
     SearchResults: { keyword: string }
 };

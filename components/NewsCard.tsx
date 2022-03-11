@@ -1,10 +1,10 @@
 import { View, Text, ImageBackground, Dimensions, StyleSheet } from 'react-native'
 import React from 'react'
-import { article } from '../types/article'
+import { Article } from '../types/article'
 
 
 type Props = { 
-  item: article,
+  item: Article,
   style: object
 }
 

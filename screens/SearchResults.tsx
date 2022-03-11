@@ -6,10 +6,11 @@ import {  SearchResultsScreenProps } from '../navigation/navigationType';;
 import { stylesCommuns } from '../styles/stylesCommuns';
 import { StatusBar } from 'expo-status-bar';
 import SearchBarAndBell from '../components/SearchBarAndBell';
-import { article } from '../types/article';
+import { Article } from '../types/article';
+import { ThemeProvider } from 'react-native-elements';
 
 type SearchResultsState = {
-    articles : article[],
+    articles : Article[],
     keyword: string,
     page: number
 }
@@ -21,14 +22,31 @@ const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
     const [searchState, setSearchState] = useState(searchStateInitial)
     
     const searchArticles = (keyword, callback) => {
-        appelNewsSearchAPI(keyword).then(data => callback(data)).catch(error => Alert.alert('Petit problème de communication avec l\'API', error.message))
+        appelNewsSearchAPI(keyword).then(data => callback(transformArticleToLightVersion(data.value))).catch(error => Alert.alert('Petit problème de communication avec l\'API', error.message))
+    }
+
+    const transformArticleToLightVersion = (articles: Article[]) => {
+        let articlesLight = []
+        let articleLight
+        articles.forEach(article=>{
+            articleLight = {
+                id: article.id,
+                title: article.title,
+                body: article.body,
+                description: article.description,
+                provider: {name: article.provider.name},
+                image: { url: article.image.url, thumbnail: article.image.thumbnail}
+            }
+            articlesLight.push(articleLight)
+        })
+        return articlesLight
     }
 
     useEffect(() => {
         if (__DEV__) console.log("useEffect")
         searchArticles(searchState.keyword, (data)=>setSearchState({
             ...searchState,
-            articles: data.value
+            articles: data
         }))
     }, [])
 
@@ -42,7 +60,7 @@ const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
 
     const onEndReached = () => {
         if (__DEV__) console.log("onEndReached")
-        searchArticles(searchState.keyword, (data)=>cumulerArticlesAvecState(data.value))
+        searchArticles(searchState.keyword, (data)=>cumulerArticlesAvecState(data))
     }
 
     const NewsCardWrapper = (props) => {
@@ -59,13 +77,13 @@ const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
             <View style={{ ...stylesCommuns.mainContainer, flex: 1 }}>
                 <SearchBarAndBell onSearch={(text) => {
                     searchArticles(text, (data)=>setSearchState({
-                        articles: data.value,
+                        articles: data,
                         keyword: text,
                         page: 1
                     }))}
                  } />
                 <View style={{ marginTop: 21, marginBottom: 21 }}>
-                    <Text style={styles.searchResultsText}>Search results for "{searchState.keyword}" (nombres d'articles dans le state : {searchState.articles.length}</Text>
+                    <Text style={styles.searchResultsText}>Search results for "{searchState.keyword}"</Text>
                 </View>
                 <FlatList
                     onEndReachedThreshold={0.7}

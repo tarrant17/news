@@ -8,7 +8,7 @@ interface provider {
     name:string
 }
 
-export interface article {
+export interface Article {
     id:string,
     title:string,
     description:string,
