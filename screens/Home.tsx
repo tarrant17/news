@@ -1,14 +1,12 @@
-import { Alert, Button, Dimensions, FlatList, Pressable, StyleSheet, Text, TextInput, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { appelNewsSearchAPI, appelTrendingNewsAPI } from '../backend/api';
 import NewsCard from '../components/NewsCard';
-import { HomeScreenProps, RootStackParamList } from '../navigation/navigationType';;
+import { HomeScreenProps } from '../navigation/navigationType';;
 import { stylesCommuns } from '../styles/stylesCommuns';
 import { StatusBar } from 'expo-status-bar';
 import SearchBarAndBell from '../components/SearchBarAndBell';
-import { routes } from '../navigation/routes';
-
 
 const Home = ({ route, navigation }: HomeScreenProps) => {
 
@@ -26,7 +24,10 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
     //if (latestNews == null || categoryNews == null) {
     useEffect(() => {
         appelerApi()
-        //setNews(bouchonData.value)
+        /*
+        setNews(bouchonData.value)
+        setCategoryNews(bouchonData.value)
+        */
     }, [])
 
     const onSearch = (text) => {

@@ -9,6 +9,7 @@ interface provider {
 }
 
 export interface article {
+    id:string,
     title:string,
     description:string,
     body:string,
