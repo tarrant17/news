@@ -48,7 +48,7 @@ const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
     const NewsCardWrapper = (props) => {
         return (
             <Pressable onPress={() => navigation.navigate('Article', { article: props.item })}>
-                <NewsCard item={props.item} style={{ marginBottom: 5, height: 128 }} />
+                <NewsCard item={props.item} style={{ marginBottom: 10, height: 200 }} />
             </Pressable >
         )
     }
@@ -68,7 +68,7 @@ const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
                     <Text style={styles.searchResultsText}>Search results for "{searchState.keyword}" (nombres d'articles dans le state : {searchState.articles.length}</Text>
                 </View>
                 <FlatList
-                    onEndReachedThreshold={0.2}
+                    onEndReachedThreshold={0.7}
                     onEndReached={()=>onEndReached()}
                     keyExtractor= {(item, index) => Math.random().toString()}
                     horizontal={false}
