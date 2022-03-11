@@ -17,7 +17,6 @@ const generateRandomImage = () => {
 }
 
 export const getNewsBouchons = () => {
-   console.log("test", newsBouchons.data.value[0].title)
    newsBouchons.data.value.forEach(element => {
       let randomImage = generateRandomImage()
       element.image.thumbnail = randomImage
