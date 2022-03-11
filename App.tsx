@@ -11,7 +11,6 @@ import 'react-native-gesture-handler'
 import Home from './screens/Home';
 import Article from './screens/Article';
 import { routes } from './navigation/routes';
-import Test from './components/SearchBarAndBell';
 import SearchResults from './screens/SearchResults';
 
 //<Icon type="ionicon" name="arrow-forward-outline"/>

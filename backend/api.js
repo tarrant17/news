@@ -37,9 +37,8 @@ export async function appelNewsSearchAPI(keyword) {
     ...optionsNewsSearchApi,
   }
   if (keyword) options.params.q = keyword
-  console.log("appel appelNewsSearchAPI", options, keyword)
+  //console.log("appel appelNewsSearchAPI", options, keyword)
   let response = await axios.request(options)
-  console.log("appel appelNewsSearchAPI", response.data.value[0].title)
   return response.data
 }
 
@@ -48,7 +47,7 @@ export async function appelTrendingNewsAPI(keyword) {
     ...optionsTrendingNewsAPI
   }
   if (keyword) options.params.q = keyword
-  console.log("appel appelTrendingNewsAPI", options)
+ // console.log("appel appelTrendingNewsAPI")
   let response = await axios.request(options)
   return response.data
 }
