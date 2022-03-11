@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { stylesCommuns } from '../../styles/stylesCommuns'
+import { stylesCommuns } from '../styles/stylesCommuns'
 import { TextInput } from 'react-native-gesture-handler'
-import colors from '../../assets/colors/colors'
+import colors from '../assets/colors/colors'
 import { EvilIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 
