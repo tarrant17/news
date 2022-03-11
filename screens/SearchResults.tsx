@@ -1,4 +1,4 @@
-import { Alert, Button, FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Alert, FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { appelNewsSearchAPI } from '../backend/api';
 import NewsCard from '../components/NewsCard';
@@ -7,7 +7,6 @@ import { stylesCommuns } from '../styles/stylesCommuns';
 import { StatusBar } from 'expo-status-bar';
 import SearchBarAndBell from '../components/SearchBarAndBell';
 import { Article } from '../types/article';
-import { ThemeProvider } from 'react-native-elements';
 
 type SearchResultsState = {
     articles : Article[],
@@ -16,7 +15,6 @@ type SearchResultsState = {
 }
 
 const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
-    console.log("ici")
     //const navigation = useNavigation<articleScreenProp>();
     let searchStateInitial : SearchResultsState =  { articles: [], keyword: route.params.keyword, page:1}
     const [searchState, setSearchState] = useState(searchStateInitial)
@@ -43,7 +41,6 @@ const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
     }
 
     useEffect(() => {
-        if (__DEV__) console.log("useEffect")
         searchArticles(searchState.keyword, (data)=>setSearchState({
             ...searchState,
             articles: data
@@ -59,7 +56,6 @@ const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
     }
 
     const onEndReached = () => {
-        if (__DEV__) console.log("onEndReached")
         searchArticles(searchState.keyword, (data)=>cumulerArticlesAvecState(data))
     }
 
