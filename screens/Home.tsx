@@ -48,7 +48,7 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
     const NewsCardWrapper = (props) => {
         return (
             <Pressable onPress={() => navigation.navigate('Article', { article: props.item })}>
-                <NewsCard item={props.item} style={{ marginBottom: 5, height: 128 }} />
+                <NewsCard item={props.item} style={{ marginBottom: 8, height: 200 }} />
             </Pressable >
         )
     }

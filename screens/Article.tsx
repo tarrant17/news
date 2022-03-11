@@ -16,21 +16,23 @@ const Article = ({ route, navigation }: ArticleScreenProps) => {
                 style={styles.imageBackgroundView}
                 source={{ uri: route.params.article.image.url }}>
             </Image>
-            <View style={styles.backButtonWrapper}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <AntDesign name="leftcircleo" size={32} color="black" />
-                </TouchableOpacity>
-            </View>
+            
             
             <View style={styles.bodyWrapper}>
                 <Text style={styles.bodyText}>{route.params.article.body}</Text>
             </View>
+            {/* elements en position absolute, a mettre à la fin*/}
             <View style={styles.titleWrapper}>
                 <LinearGradient colors={['rgba(120,120,120,0.5)', 'rgba(180,180,180,0.5)', 'rgba(210,210,210,0.5)',  'rgba(240,240,240,0.5)', 'rgba(270,270,270,0.5)',  'transparent']} style={styles.titleBorderWrapper}>
                     <Text style={styles.dateTitleText}>{new Date(route.params.article.datePublished).toDateString()}</Text>
                     <Text numberOfLines={5} style={styles.titleText}>{route.params.article.title}</Text>
                     <Text style={styles.sourceTitleText}>From {route.params.article.provider.name}</Text>
                 </LinearGradient>
+            </View>
+            <View style={styles.backButtonWrapper}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <AntDesign name="leftcircleo" size={32} color="white" />
+                </TouchableOpacity>
             </View>
         </ScrollView>
         </>
@@ -48,7 +50,9 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 52,
         left: 15,
-        opacity: 10
+        opacity: 10,
+        backgroundColor:'grey',
+        borderRadius:32/2
     },
     imageBackgroundView: {
         width: '100%',
