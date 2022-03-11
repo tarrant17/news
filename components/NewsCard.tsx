@@ -2,6 +2,7 @@ import { View, Text, ImageBackground, Dimensions, StyleSheet } from 'react-nativ
 import React from 'react'
 import { article } from '../types/article'
 
+
 type Props = { 
   item: article,
   style: object
@@ -10,12 +11,14 @@ type Props = {
 const NewsCard = (props: Props) => {
 
   const defaultUriImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/A_black_image.jpg/640px-A_black_image.jpg"
+  let uriImage = props.item.image.thumbnail ? {uri:props.item.image.thumbnail} : {uri:defaultUriImage}
+
   return (
         <View style={{...styles.cardNewsWrapper, ...props.style}}>
           <ImageBackground resizeMode="cover" 
             style={styles.cardNewsImageBackgroundView} 
             imageStyle={styles.cardNewsImageBackgroundImage}
-            source={props.item.image.thumbnail ? {uri:props.item.image.thumbnail} : {uri:defaultUriImage}}>
+            source={uriImage}>
             <View style={styles.cardNewsOpacityWrapper}>
             <View style={styles.cardNewsAuthorTitleWrapper}>
               <Text style={styles.cardNewsAuthorText}>by {props.item.provider.name}</Text>

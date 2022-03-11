@@ -1,5 +1,7 @@
 import axios from "axios";
-import { bouchonData } from "../assets/data/data";
+import { getNewsBouchons } from "../assets/data/newsBouchons";
+
+export const BOUCHONNER_APPEL_API = true
 
 const  headers = {
   'x-rapidapi-host': 'contextualwebsearch-websearch-v1.p.rapidapi.com',
@@ -10,7 +12,6 @@ const options = {
   method: 'GET',
   url: 'https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/search/',
   params: {
-    q: 'France',
     pageNumber: '1',
     pageSize: '10',
     autoCorrect: 'true',
@@ -33,21 +34,36 @@ const optionsNewsSearchApi = {
 };
 
 export async function appelNewsSearchAPI(keyword) {
+  
   let options = {
     ...optionsNewsSearchApi,
   }
   if (keyword) options.params.q = keyword
-  //console.log("appel appelNewsSearchAPI", options, keyword)
-  let response = await axios.request(options)
+
+  if (__DEV__) console.log("appel appelNewsSearchAPI", keyword)
+
+  let response
+  if (!BOUCHONNER_APPEL_API) {
+    response = await axios.request(options)
+  } else {
+    response = getNewsBouchons()
+  }
   return response.data
 }
 
-export async function appelTrendingNewsAPI(keyword) {
+export async function appelTrendingNewsAPI() {
+  
   let options = {
     ...optionsTrendingNewsAPI
   }
-  if (keyword) options.params.q = keyword
- // console.log("appel appelTrendingNewsAPI")
-  let response = await axios.request(options)
+ 
+  if (__DEV__) console.log("appel appelTrendingNewsAPI")
+
+  let response
+  if (!BOUCHONNER_APPEL_API) {
+    await axios.request(options)
+  } else {
+    response = getNewsBouchons()
+  }
   return response.data
 }
