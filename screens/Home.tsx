@@ -9,43 +9,67 @@ import { StatusBar } from 'expo-status-bar';
 import SearchBarAndBell from '../components/SearchBarAndBell';
 
 const Home = ({ route, navigation }: HomeScreenProps) => {
+    if (__DEV__) console.log("render HOME")
 
-    //const navigation = useNavigation<articleScreenProp>();
+    const categories = ["Technology", "Healthy", "Finance", "Arts", "Spectacles"]
 
-    const appelerApi = () => {
-        if (latestNews == null) appelTrendingNewsAPI().then(data => setNews(data.value)).catch(error => Alert.alert('Petit problème de communication avec l\'API', error.message))
-        if (categoryNews == null) appelNewsSearchAPI().then(data => setCategoryNews(data.value)).catch(error => Alert.alert('Petit problème de communication avec l\'API', error.message))
+    let [newsTrend, setNewsTrend] = useState(null)
+    let [newsFilteredByCategory, setNewsTrendFilteredByCategory] = useState(null)
+    let [categorySelected, setCategorySelected] = useState("Technology")
+
+    const appelerApiTrendingNewsAndMajState = (ajouterResultatsAuPrecedentState=false) => {
+        appelTrendingNewsAPI()
+        .then(data => {
+            if (ajouterResultatsAuPrecedentState) {
+                setNewsTrend([...newsTrend, ...data.value])
+            } else {
+                setNewsTrend(data.value)
+            }
+            if (__DEV__) console.log("latestNews.length", newsFilteredByCategory.length)
+        })
+        .catch(error => Alert.alert('Petit problème de communication avec l\'API', error.message))
     }
 
-    let [latestNews, setNews] = useState(null)
-    let [categoryNews, setCategoryNews] = useState(null)
+    const appelerApiNewsSearchAPIAndMajState = (keyword?, ajouterResultatsAuPrecedentState=false) => {
+        appelNewsSearchAPI(keyword)
+        .then(data => {
+            if (ajouterResultatsAuPrecedentState) {
+                setNewsTrendFilteredByCategory([...newsFilteredByCategory, ...data.value])
+            } else {
+                setNewsTrendFilteredByCategory(data.value)
+            }
+            if (__DEV__) console.log("newsFilteredByCategory.length", newsFilteredByCategory.length)
+            
+        })
+        .catch(error => Alert.alert('Petit problème de communication avec l\'API', error.message))
+    }
 
-
-    //if (latestNews == null || categoryNews == null) {
     useEffect(() => {
-        appelerApi()
-        /*
-        setNews(bouchonData.value)
-        setCategoryNews(bouchonData.value)
-        */
+        if (newsTrend == null) appelerApiTrendingNewsAndMajState()
+        if (newsFilteredByCategory == null) appelerApiNewsSearchAPIAndMajState()
     }, [])
 
     const onSearch = (text) => {
         navigation.navigate("SearchResults", { keyword : text})
     }
 
+    const onEndReachedFlatListNewsByCategory = () => {
+        appelerApiNewsSearchAPIAndMajState(categorySelected, true)
+    }
 
-    const LatestNewsCardWrapper = (props) => {
+    const onEndReachedFlatListnewsTrend = () => {
+        appelerApiTrendingNewsAndMajState(true)
+    }
+
+    const NewsTrendCardWrapper = (props) => {
         return (
-
             <Pressable onPress={() => navigation.navigate('Article', { article: props.item })}>
                 <NewsCard item={props.item} style={{ marginRight: 5, height: 200, width: 220 }} />
             </Pressable>
-
         )
     }
 
-    const NewsCardWrapper = (props) => {
+    const NewsCategoryCardWrapper = (props) => {
         return (
             <Pressable onPress={() => navigation.navigate('Article', { article: props.item })}>
                 <NewsCard item={props.item} style={{ marginBottom: 8, height: 200 }} />
@@ -53,36 +77,60 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
         )
     }
 
-
+    const Category = (props) => {
+        return (
+            <Pressable onPress={() => {
+                setCategorySelected(props.label)
+                appelerApiNewsSearchAPIAndMajState(props.label) 
+            }}>
+                <Text style={(props.label==categorySelected) ? {...styles.categorieText, ...styles.categorieSelectedText} : {...styles.categorieText}}>{props.label}</Text>
+            </Pressable>
+        )
+    }
 
     return (
         <>
             <StatusBar style="auto" />
             <View style={{ ...stylesCommuns.mainContainer, flex: 1 }}>
                 <SearchBarAndBell onSearch={(text) => onSearch(text)} />
-                <View style={styles.latestNewsWrapper}>
-                    <Text style={styles.latestNewsText}>Trending news</Text>
-                    <TouchableOpacity style={styles.latestNewsSeeAllWrapper}>
-                        <Text style={styles.latestNewsSeeAllText}>See All</Text>
+                <View style={styles.newsTrendWrapper}>
+                    <Text style={styles.newsTrendText}>Trending news</Text>
+                    <TouchableOpacity style={styles.newsTrendSeeAllWrapper}>
+                        <Text style={styles.newsTrendSeeAllText}>See All</Text>
                         <AntDesign name="arrowright" color="blue" />
                     </TouchableOpacity>
                 </View>
-                <View style={styles.latestNewsFlatList}>
+                <View style={styles.newsTrendFlatList}>
                     <FlatList
+                        onEndReachedThreshold={0.7}
+                        onEndReached={()=>onEndReachedFlatListnewsTrend()}
                         horizontal={true}
+                        keyExtractor={()=>Math.random().toString()}
                         showsHorizontalScrollIndicator={false}
-                        data={latestNews}
-                        renderItem={(item) => <LatestNewsCardWrapper item={item.item} />}
+                        data={newsTrend}
+                        renderItem={(item) => <NewsTrendCardWrapper item={item.item} />}
                     />
                 </View>
                 <View style={{ marginTop: 21, marginBottom: 21 }}>
-                    <Text style={styles.latestNewsText}>All news</Text>
+                    <Text style={styles.newsTrendText}>All news</Text>
+                </View>
+                <View style={styles.categoriesWrapper}>
+                    <FlatList
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            showsVerticalScrollIndicator={false}
+                            keyExtractor={(item)=>item}
+                            data={categories}
+                            renderItem={(item) => <Category label={item.item}/>}
+                        />
                 </View>
                 <FlatList
-                    horizontal={false}
+                    onEndReachedThreshold={0.7}       
+                    onEndReached={()=>onEndReachedFlatListNewsByCategory()}
                     showsVerticalScrollIndicator={false}
-                    data={categoryNews}
-                    renderItem={(item) => <NewsCardWrapper item={item.item} />}
+                    keyExtractor={(item, index) => Math.random().toString()}
+                    data={newsFilteredByCategory}
+                    renderItem={(item) => <NewsCategoryCardWrapper item={item.item} />}
                 />
             </View>
         </>
@@ -93,24 +141,39 @@ export default Home
 
 const styles = StyleSheet.create({
 
-    latestNewsWrapper: {
+    newsTrendWrapper: {
         flexDirection: "row",
         justifyContent: "space-between"
     },
-    latestNewsText: {
+    newsTrendText: {
         fontSize: 18,
         fontFamily: "Newsreader_700Bold"
     },
-    latestNewsSeeAllWrapper: {
+    newsTrendSeeAllWrapper: {
         flexDirection: "row",
         alignItems: "center"
     },
-    latestNewsSeeAllText: {
+    newsTrendSeeAllText: {
         color: "blue",
         fontFamily: "Nunito_400Regular",
         marginRight: 10
     },
-    latestNewsFlatList: {
+    newsTrendFlatList: {
         marginTop: 21
+    },
+    categoriesWrapper: {
+        marginBottom: 21
+    },
+    categorieText: {
+        marginHorizontal:8,
+        padding: 8,
+        color: "black",
+        fontFamily: "Nunito_400Regular",
+        fontSize: 12
+    },
+    categorieSelectedText: {
+        backgroundColor: "red",
+        color: "white",
+        borderRadius: 20,
     }
 })

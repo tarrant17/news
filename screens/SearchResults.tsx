@@ -7,6 +7,7 @@ import { stylesCommuns } from '../styles/stylesCommuns';
 import { StatusBar } from 'expo-status-bar';
 import SearchBarAndBell from '../components/SearchBarAndBell';
 import { Article } from '../types/article';
+import { transformArticleToLightVersion } from '../backend/APITools';
 
 type SearchResultsState = {
     articles : Article[],
@@ -20,30 +21,15 @@ const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
     const [searchState, setSearchState] = useState(searchStateInitial)
     
     const searchArticles = (keyword, callback) => {
-        appelNewsSearchAPI(keyword).then(data => callback(transformArticleToLightVersion(data.value))).catch(error => Alert.alert('Petit problème de communication avec l\'API', error.message))
-    }
-
-    const transformArticleToLightVersion = (articles: Article[]) => {
-        let articlesLight = []
-        let articleLight
-        articles.forEach(article=>{
-            articleLight = {
-                id: article.id,
-                title: article.title,
-                body: article.body,
-                description: article.description,
-                provider: {name: article.provider.name},
-                image: { url: article.image.url, thumbnail: article.image.thumbnail}
-            }
-            articlesLight.push(articleLight)
-        })
-        return articlesLight
+        appelNewsSearchAPI(keyword)
+        .then(data => callback(transformArticleToLightVersion(data.value)))
+        .catch(error => Alert.alert('Petit problème de communication avec l\'API', error.message))
     }
 
     useEffect(() => {
-        searchArticles(searchState.keyword, (data)=>setSearchState({
+        searchArticles(searchState.keyword, (articlesFromAPI)=>setSearchState({
             ...searchState,
-            articles: data
+            articles: articlesFromAPI
         }))
     }, [])
 
@@ -56,7 +42,7 @@ const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
     }
 
     const onEndReached = () => {
-        searchArticles(searchState.keyword, (data)=>cumulerArticlesAvecState(data))
+        searchArticles(searchState.keyword, (articlesFromAPI)=>cumulerArticlesAvecState(articlesFromAPI))
     }
 
     const NewsCardWrapper = (props) => {
@@ -72,8 +58,8 @@ const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
             <StatusBar style="auto" />
             <View style={{ ...stylesCommuns.mainContainer, flex: 1 }}>
                 <SearchBarAndBell onSearch={(text) => {
-                    searchArticles(text, (data)=>setSearchState({
-                        articles: data,
+                    searchArticles(text, (articlesFromAPI)=>setSearchState({
+                        articles: articlesFromAPI,
                         keyword: text,
                         page: 1
                     }))}
