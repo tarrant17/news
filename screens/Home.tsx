@@ -7,54 +7,77 @@ import { HomeScreenProps } from '../navigation/navigationType';;
 import { stylesCommuns } from '../styles/stylesCommuns';
 import { StatusBar } from 'expo-status-bar';
 import SearchBarAndBell from '../components/SearchBarAndBell';
+import { Article } from '../types/article';
+
+type NewsTrendState = {
+    newsTrend: Article[],
+    pageNumber: number
+}
+type newsFilteredByCategoryState = {
+    newsFilteredByCategory: Article[],
+    pageNumber: number,
+    categorySelected: string
+}
 
 const Home = ({ route, navigation }: HomeScreenProps) => {
     if (__DEV__) console.log("render HOME")
 
     const categories = ["Technology", "Healthy", "Finance", "Arts", "Spectacles"]
 
-    let [newsTrend, setNewsTrend] = useState(null)
-    let [newsFilteredByCategory, setNewsTrendFilteredByCategory] = useState(null)
-    let [categorySelected, setCategorySelected] = useState("Technology")
+    let [newsTrendState, setNewsTrendState] = useState({ newsTrend: null, pageNumber: 0 })
+    let [newsFilteredByCategoryState, setNewsFilteredByCategoryState] = useState({ newsFilteredByCategory: null, pageNumber: 0, categorySelected: categories[0] })
 
-    const appelerApiTrendingNewsAndMajState = (ajouterResultatsAuPrecedentState=false) => {
-        appelTrendingNewsAPI()
-        .then(data => {
-            if (ajouterResultatsAuPrecedentState) {
-                setNewsTrend([...newsTrend, ...data.value])
-            } else {
-                setNewsTrend(data.value)
-            }
-            if (__DEV__) console.log("latestNews.length", newsFilteredByCategory.length)
-        })
-        .catch(error => Alert.alert('Petit problème de communication avec l\'API', error.message))
+    const appelerApiTrendingNewsAndMajState = (ajouterNouvellePageArticleAuState = false) => {
+        appelTrendingNewsAPI(ajouterNouvellePageArticleAuState ? newsTrendState.pageNumber : 1)
+            .then(data => {
+                if (ajouterNouvellePageArticleAuState) {
+                    setNewsTrendState({
+                        newsTrend: [...newsTrendState.newsTrend, ...data.value],
+                        pageNumber: newsTrendState.pageNumber + 1
+                    })
+                } else {
+                    setNewsTrendState({
+                        newsTrend: data.value,
+                        pageNumber: 1
+                    })
+                }
+            })
+            .catch(error => Alert.alert('Petit problème de communication avec l\'API', error.message))
     }
 
-    const appelerApiNewsSearchAPIAndMajState = (keyword?, ajouterResultatsAuPrecedentState=false) => {
-        appelNewsSearchAPI(keyword)
-        .then(data => {
-            if (ajouterResultatsAuPrecedentState) {
-                setNewsTrendFilteredByCategory([...newsFilteredByCategory, ...data.value])
-            } else {
-                setNewsTrendFilteredByCategory(data.value)
-            }
-            if (__DEV__) console.log("newsFilteredByCategory.length", newsFilteredByCategory.length)
-            
-        })
-        .catch(error => Alert.alert('Petit problème de communication avec l\'API', error.message))
+    const appelerApiNewsSearchAPIAndMajState = (keyword?, ajouterNouvellePageArticleAuState = false) => {
+        appelNewsSearchAPI(keyword, ajouterNouvellePageArticleAuState ? newsFilteredByCategoryState.pageNumber : 1)
+            .then(data => {
+                if (ajouterNouvellePageArticleAuState) {
+                    setNewsFilteredByCategoryState({
+                        newsFilteredByCategory: [...newsFilteredByCategoryState.newsFilteredByCategory, ...data.value],
+                        pageNumber: newsFilteredByCategoryState.pageNumber + 1,
+                        categorySelected: newsFilteredByCategoryState.categorySelected
+                    })
+
+                } else {
+                    setNewsFilteredByCategoryState({
+                        newsFilteredByCategory: data.value,
+                        pageNumber: 1,
+                        categorySelected: keyword
+                    })
+                }
+
+            })
+            .catch(error => Alert.alert('Petit problème de communication avec l\'API', error.message))
     }
 
     useEffect(() => {
-        if (newsTrend == null) appelerApiTrendingNewsAndMajState()
-        if (newsFilteredByCategory == null) appelerApiNewsSearchAPIAndMajState()
+        if (newsTrendState.newsTrend == null) appelerApiTrendingNewsAndMajState()
+        if (newsFilteredByCategoryState.newsFilteredByCategory == null) appelerApiNewsSearchAPIAndMajState()
     }, [])
 
     const onSearch = (text) => {
-        navigation.navigate("SearchResults", { keyword : text})
+        navigation.navigate("SearchResults", { keyword: text })
     }
 
     const onEndReachedFlatListNewsByCategory = () => {
-        appelerApiNewsSearchAPIAndMajState(categorySelected, true)
+        appelerApiNewsSearchAPIAndMajState(newsFilteredByCategoryState.categorySelected, true)
     }
 
     const onEndReachedFlatListnewsTrend = () => {
@@ -80,10 +103,9 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
     const Category = (props) => {
         return (
             <Pressable onPress={() => {
-                setCategorySelected(props.label)
-                appelerApiNewsSearchAPIAndMajState(props.label) 
+                appelerApiNewsSearchAPIAndMajState(props.label)
             }}>
-                <Text style={(props.label==categorySelected) ? {...styles.categorieText, ...styles.categorieSelectedText} : {...styles.categorieText}}>{props.label}</Text>
+                <Text style={(props.label == newsFilteredByCategoryState.categorySelected) ? { ...styles.categorieText, ...styles.categorieSelectedText } : { ...styles.categorieText }}>{props.label}</Text>
             </Pressable>
         )
     }
@@ -95,7 +117,7 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
                 <SearchBarAndBell onSearch={(text) => onSearch(text)} />
                 <View style={styles.newsTrendWrapper}>
                     <Text style={styles.newsTrendText}>Trending news</Text>
-                    <TouchableOpacity style={styles.newsTrendSeeAllWrapper} onPress={()=>navigation.navigate('TrendingNews')}>
+                    <TouchableOpacity style={styles.newsTrendSeeAllWrapper} onPress={() => navigation.navigate('TrendingNews')}>
                         <Text style={styles.newsTrendSeeAllText}>See All</Text>
                         <AntDesign name="arrowright" color="blue" />
                     </TouchableOpacity>
@@ -103,11 +125,11 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
                 <View style={styles.newsTrendFlatList}>
                     <FlatList
                         onEndReachedThreshold={0.7}
-                        onEndReached={()=>onEndReachedFlatListnewsTrend()}
+                        onEndReached={() => onEndReachedFlatListnewsTrend()}
                         horizontal={true}
-                        keyExtractor={()=>Math.random().toString()}
+                        keyExtractor={() => Math.random().toString()}
                         showsHorizontalScrollIndicator={false}
-                        data={newsTrend}
+                        data={newsTrendState.newsTrend}
                         renderItem={(item) => <NewsTrendCardWrapper item={item.item} />}
                     />
                 </View>
@@ -116,20 +138,20 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
                 </View>
                 <View style={styles.categoriesWrapper}>
                     <FlatList
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false}
-                            showsVerticalScrollIndicator={false}
-                            keyExtractor={(item)=>item}
-                            data={categories}
-                            renderItem={(item) => <Category label={item.item}/>}
-                        />
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        showsVerticalScrollIndicator={false}
+                        keyExtractor={(item) => item}
+                        data={categories}
+                        renderItem={(item) => <Category label={item.item} />}
+                    />
                 </View>
                 <FlatList
-                    onEndReachedThreshold={0.7}       
-                    onEndReached={()=>onEndReachedFlatListNewsByCategory()}
+                    onEndReachedThreshold={0.7}
+                    onEndReached={() => onEndReachedFlatListNewsByCategory()}
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item, index) => Math.random().toString()}
-                    data={newsFilteredByCategory}
+                    data={newsFilteredByCategoryState.newsFilteredByCategory}
                     renderItem={(item) => <NewsCategoryCardWrapper item={item.item} />}
                 />
             </View>
@@ -165,7 +187,7 @@ const styles = StyleSheet.create({
         marginBottom: 21
     },
     categorieText: {
-        marginHorizontal:8,
+        marginHorizontal: 8,
         padding: 8,
         color: "black",
         fontFamily: "Nunito_400Regular",

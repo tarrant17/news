@@ -1,30 +1,39 @@
 import { Alert, FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { appelNewsSearchAPI, appelTrendingNewsAPI } from '../backend/api';
+import { appelTrendingNewsAPI } from '../backend/api';
 import NewsCard from '../components/NewsCard';
-import {  SearchResultsScreenProps } from '../navigation/navigationType';;
+import { SearchResultsScreenProps } from '../navigation/navigationType';;
 import { stylesCommuns } from '../styles/stylesCommuns';
 import { StatusBar } from 'expo-status-bar';
 import SearchBarAndBell from '../components/SearchBarAndBell';
 import { Article } from '../types/article';
-import { transformArticleToLightVersion } from '../backend/APITools';
 
-
+type TrendingNewsState = {
+    trendingNews: Article[],
+    pageNumber: number
+}
 const TrendingNews = ({ route, navigation }: SearchResultsScreenProps) => {
-    
-    const [trendingNews, setTrendingNews] = useState([])
-    
-    const appelerAPITrendingNewsAndMajState = (ajouterArticlesAuStateExistant=false) => {
-        appelTrendingNewsAPI()
-        .then(data => {
-            if (ajouterArticlesAuStateExistant) {
-                setTrendingNews([...trendingNews, ...data.value])
-            } else {
-                setTrendingNews(data.value)
-            }
-            
-        })
-        .catch(error => Alert.alert('Petit problème de communication avec l\'API', error.message))
+    if (__DEV__) console.log("render")
+    let initialState = { trendingNews: [], pageNumber: 1 }
+    const [trendingNewsState, setTrendingNewsState] = useState(initialState)
+
+    const appelerAPITrendingNewsAndMajState = (ajouterArticlesAuStateExistant = false) => {
+        appelTrendingNewsAPI(ajouterArticlesAuStateExistant ? trendingNewsState.pageNumber + 1 : 1)
+            .then(data => {
+                if (ajouterArticlesAuStateExistant) {
+                    setTrendingNewsState({
+                        trendingNews: [...trendingNewsState.trendingNews, ...data.value],
+                        pageNumber: trendingNewsState.pageNumber+1
+                    })
+                } else {
+                    setTrendingNewsState({
+                        trendingNews: data.value,
+                        pageNumber: 1
+                    })
+                }
+
+            })
+            .catch(error => Alert.alert('Petit problème de communication avec l\'API', error.message))
     }
 
     useEffect(() => {
@@ -32,6 +41,7 @@ const TrendingNews = ({ route, navigation }: SearchResultsScreenProps) => {
     }, [])
 
     const onEndReached = () => {
+        if (__DEV__) console.log("onEndReached")
         appelerAPITrendingNewsAndMajState(true)
     }
 
@@ -47,17 +57,17 @@ const TrendingNews = ({ route, navigation }: SearchResultsScreenProps) => {
         <>
             <StatusBar style="auto" />
             <View style={{ ...stylesCommuns.mainContainer, flex: 1 }}>
-                <SearchBarAndBell onSearch={text => navigation.navigate("SearchResults", {keyword:text})}/>
+                <SearchBarAndBell onSearch={text => navigation.navigate("SearchResults", { keyword: text })} />
                 <View style={{ marginTop: 21, marginBottom: 21 }}>
                     <Text style={styles.searchResultsText}>All trending news</Text>
                 </View>
                 <FlatList
                     onEndReachedThreshold={0.7}
-                    onEndReached={()=>onEndReached()}
-                    keyExtractor= {(item, index) => Math.random().toString()}
+                    onEndReached={() => onEndReached()}
+                    keyExtractor={(item, index) => Math.random().toString()}
                     horizontal={false}
                     showsVerticalScrollIndicator={false}
-                    data={trendingNews}
+                    data={trendingNewsState.trendingNews}
                     renderItem={(item) => <NewsCardWrapper item={item.item} />}
                 />
             </View>
