@@ -1,6 +1,6 @@
 import { Article } from "../types/article"
 
-export const transformArticleToLightVersion = (articles: Article[]) => {
+export const transformArticleToLightVersion = (articles: Article[]):Article[] => {
     let articlesLight = []
     let articleLight
     articles.forEach(article=>{
