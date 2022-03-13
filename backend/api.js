@@ -34,14 +34,15 @@ const optionsNewsSearchApi = {
   url: options.url + 'NewsSearchAPI',
 };
 
-export async function appelNewsSearchAPI(keyword) {
+export async function appelNewsSearchAPI(keyword, pageNumber) {
   
   let options = {
     ...optionsNewsSearchApi,
+    pageNumber: pageNumber
   }
   if (keyword) options.params.q = keyword
 
-  if (__DEV__) console.log("appel appelNewsSearchAPI", keyword, API_KEY)
+  if (__DEV__) console.log("appel appelNewsSearchAPI", keyword, pageNumber)
 
   let response
   if (!BOUCHONNER_APPEL_API) {
@@ -52,13 +53,14 @@ export async function appelNewsSearchAPI(keyword) {
   return response.data
 }
 
-export async function appelTrendingNewsAPI() {
+export async function appelTrendingNewsAPI(pageNumber) {
   
   let options = {
-    ...optionsTrendingNewsAPI
+    ...optionsTrendingNewsAPI,
+    page: pageNumber
   }
  
-  if (__DEV__) console.log("appel appelTrendingNewsAPI")
+  if (__DEV__) console.log("appel appelTrendingNewsAPI", "PageNumber", pageNumber)
 
   let response
   if (!BOUCHONNER_APPEL_API) {

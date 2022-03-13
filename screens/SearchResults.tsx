@@ -8,6 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import SearchBarAndBell from '../components/SearchBarAndBell';
 import { Article } from '../types/article';
 import { transformArticleToLightVersion } from '../backend/APITools';
+import { ReloadInstructions } from 'react-native/Libraries/NewAppScreen';
 
 type SearchResultsState = {
     articles : Article[],
@@ -20,29 +21,37 @@ const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
     let searchStateInitial : SearchResultsState =  { articles: [], keyword: route.params.keyword, page:1}
     const [searchState, setSearchState] = useState(searchStateInitial)
     
-    const searchArticles = (keyword, callback) => {
-        appelNewsSearchAPI(keyword)
-        .then(data => callback(transformArticleToLightVersion(data.value)))
-        .catch(error => Alert.alert('Petit problème de communication avec l\'API', error.message))
+    const searchArticles = async (keyword, pageNumber) => {
+        try {
+            let data = await appelNewsSearchAPI(keyword, pageNumber)
+            return transformArticleToLightVersion(data.value)
+        }
+        catch (error) {
+            Alert.alert('Petit problème de communication avec l\'API', error.message)
+            console.error (error)
+            return []
+        }
+        
     }
 
     useEffect(() => {
-        searchArticles(searchState.keyword, (articlesFromAPI)=>setSearchState({
+        searchArticles(searchState.keyword, searchState.page).then((articlesFromAPI)=>setSearchState({
             ...searchState,
             articles: articlesFromAPI
         }))
     }, [])
 
-    const cumulerArticlesAvecState = (articlesAAjouter) => {
+    const ajouterNouvellePageArticleAuState = (articlesAAjouter) => {
         let articlesCumul = [...searchState.articles, ...articlesAAjouter]
         setSearchState({
-            ...searchState,
+            keyword: searchState.keyword,
+            page: searchState.page+1,
             articles: articlesCumul
         })
     }
 
     const onEndReached = () => {
-        searchArticles(searchState.keyword, (articlesFromAPI)=>cumulerArticlesAvecState(articlesFromAPI))
+        searchArticles(searchState.keyword, searchState.page).then((articlesFromAPI)=>ajouterNouvellePageArticleAuState(articlesFromAPI))
     }
 
     const NewsCardWrapper = (props) => {
@@ -58,7 +67,7 @@ const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
             <StatusBar style="auto" />
             <View style={{ ...stylesCommuns.mainContainer, flex: 1 }}>
                 <SearchBarAndBell onSearch={(text) => {
-                    searchArticles(text, (articlesFromAPI)=>setSearchState({
+                    searchArticles(text, 1).then((articlesFromAPI)=>setSearchState({
                         articles: articlesFromAPI,
                         keyword: text,
                         page: 1
