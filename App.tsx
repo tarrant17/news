@@ -12,6 +12,7 @@ import Home from './screens/Home';
 import Article from './screens/Article';
 import { routes } from './navigation/routes';
 import SearchResults from './screens/SearchResults';
+import TrendingNews from './screens/TrendingNews';
 
 //<Icon type="ionicon" name="arrow-forward-outline"/>
 export default function App() {
@@ -36,6 +37,9 @@ export default function App() {
           headerShown: false
         }} />
         <Stack.Screen name={routes.SearchResults} component={SearchResults} options={{
+          headerShown: false
+        }} />
+        <Stack.Screen name={routes.TrendingNews} component={TrendingNews} options={{
           headerShown: false
         }} />
       </Stack.Navigator>

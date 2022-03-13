@@ -95,7 +95,7 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
                 <SearchBarAndBell onSearch={(text) => onSearch(text)} />
                 <View style={styles.newsTrendWrapper}>
                     <Text style={styles.newsTrendText}>Trending news</Text>
-                    <TouchableOpacity style={styles.newsTrendSeeAllWrapper}>
+                    <TouchableOpacity style={styles.newsTrendSeeAllWrapper} onPress={()=>navigation.navigate('TrendingNews')}>
                         <Text style={styles.newsTrendSeeAllText}>See All</Text>
                         <AntDesign name="arrowright" color="blue" />
                     </TouchableOpacity>
