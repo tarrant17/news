@@ -1,11 +1,12 @@
 import axios from "axios";
 import { getNewsBouchons } from "../assets/data/newsBouchons";
-
+import { API_KEY } from "@env"
 export const BOUCHONNER_APPEL_API = true
+
 
 const  headers = {
   'x-rapidapi-host': 'contextualwebsearch-websearch-v1.p.rapidapi.com',
-  'x-rapidapi-key': '10bd87694cmshc0d81fc2c0847f3p16d282jsnf2f1a2789525'
+  'x-rapidapi-key': API_KEY
 }
 
 const options = {
@@ -40,7 +41,7 @@ export async function appelNewsSearchAPI(keyword) {
   }
   if (keyword) options.params.q = keyword
 
-  if (__DEV__) console.log("appel appelNewsSearchAPI", keyword)
+  if (__DEV__) console.log("appel appelNewsSearchAPI", keyword, API_KEY)
 
   let response
   if (!BOUCHONNER_APPEL_API) {
