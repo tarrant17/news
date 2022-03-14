@@ -8,6 +8,7 @@ import { stylesCommuns } from '../styles/stylesCommuns';
 import { StatusBar } from 'expo-status-bar';
 import SearchBarAndBell from '../components/SearchBarAndBell';
 import { Article } from '../types/article';
+import { categories } from '../backend/Categories';
 
 type NewsTrendState = {
     newsTrend: Article[],
@@ -21,8 +22,6 @@ type newsFilteredByCategoryState = {
 
 const Home = ({ route, navigation }: HomeScreenProps) => {
     if (__DEV__) console.log("render HOME")
-
-    const categories = ["Technology", "Healthy", "Finance", "Arts", "Spectacles"]
 
     let [newsTrendState, setNewsTrendState] : [NewsTrendState, any] = useState({ newsTrend: null, pageNumber: 0 })
     let [newsFilteredByCategoryState, setNewsFilteredByCategoryState]: [newsFilteredByCategoryState, any] = useState({ newsFilteredByCategory: null, pageNumber: 0, categorySelected: categories[0] })

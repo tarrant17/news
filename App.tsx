@@ -13,8 +13,9 @@ import Article from './screens/Article';
 import { routes } from './navigation/routes';
 import SearchResults from './screens/SearchResults';
 import TrendingNews from './screens/TrendingNews';
+import CustomToast from './components/CustomToast';
 
-//<Icon type="ionicon" name="arrow-forward-outline"/>
+
 export default function App() {
 
   let [fontsLoaded] = useFonts({
@@ -25,9 +26,12 @@ export default function App() {
     return <AppLoading />;
   }
 
+  
+
   const Stack = createStackNavigator<RootStackParamList>();
 
   return (
+    <>
     <NavigationContainer>
       <Stack.Navigator >
         <Stack.Screen name={routes.Home} component={Home} options={{
@@ -44,6 +48,8 @@ export default function App() {
         }} />
       </Stack.Navigator>
     </NavigationContainer>
+    <CustomToast/>
+    </>
   );
 }
 

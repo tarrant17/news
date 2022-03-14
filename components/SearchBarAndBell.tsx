@@ -1,29 +1,51 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import { stylesCommuns } from '../styles/stylesCommuns'
 import { TextInput } from 'react-native-gesture-handler'
-import colors from '../assets/colors/colors'
 import { EvilIcons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+import { enregistrerNouvelleRechercheFavorite } from '../backend/RecherchesFavorites';
+import Toast from 'react-native-toast-message';
 
 type Props = {
   onSearch: any
 }
 
 const SearchBarAndBell = (props: Props) => {
-    return (
-      <View style={styles.componentWrapper}>
-        <View style={styles.searchBarWrapper}>
-          <TextInput style={styles.searchBarTextInput} placeholder='Dogecoin to the moon ...' onSubmitEditing={(value) => props.onSearch(value.nativeEvent.text)} />
-          <View style={styles.searchBarIconWrapper}>
-            <EvilIcons name="search" size={24} color="lightgrey" />
-          </View>
+
+  let valueSearchBar = ""
+
+
+  const ajouterRechercheAuxFavoris = (recherche) => {
+    if (recherche == null || recherche == "") {
+      Toast.show({
+        type: 'info',
+        text1: 'Hello',
+        text2: 'Search field is empty, type something before adding !'
+      })
+    }
+    else {
+      enregistrerNouvelleRechercheFavorite(valueSearchBar)
+        .then(() => Toast.show({
+          type: 'info',
+          text1: 'Hello',
+          text2: valueSearchBar + ' has been added to your favourites 👋'
+        }))
+    }
+  }
+
+  return (
+    <View style={styles.componentWrapper}>
+      <View style={styles.searchBarWrapper}>
+        <TextInput style={styles.searchBarTextInput} placeholder='News on request ...' onChangeText={text => valueSearchBar = text} onSubmitEditing={(value) => props.onSearch(value.nativeEvent.text)} />
+        <View style={styles.searchBarIconWrapper}>
+          <EvilIcons name="search" size={24} color="lightgrey" />
         </View>
-        <View style={styles.searchBarIconBellWrapper}>
-          <Feather name="bell" size={20} color="white" />
-        </View>  
       </View>
-    )
+      <TouchableOpacity onPress={() => ajouterRechercheAuxFavoris(valueSearchBar)} style={styles.searchBarIconBellWrapper}>
+        <MaterialIcons name="favorite-border" size={20} color="white" />
+      </TouchableOpacity>
+    </View>
+  )
 }
 
 export default SearchBarAndBell
@@ -31,7 +53,7 @@ export default SearchBarAndBell
 const styles = StyleSheet.create({
   componentWrapper: {
     flexDirection: 'row',
-    justifyContent:'space-between',
+    justifyContent: 'space-between',
     marginBottom: 20,
     marginTop: 20
   },
@@ -39,7 +61,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width:'90%'
+    width: '90%'
   },
   searchBarTextInput: {
     borderWidth: 1,
@@ -59,6 +81,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     backgroundColor: 'red',
-    borderRadius: 40/2,
+    borderRadius: 40 / 2,
   },
 })
