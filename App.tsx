@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import { Nunito_400Regular, Nunito_800ExtraBold } from '@expo-google-fonts/nunito';
+import { Nunito_400Regular, Nunito_800ExtraBold, Nunito_600SemiBold_Italic } from '@expo-google-fonts/nunito';
 import { Newsreader_400Regular, Newsreader_700Bold } from '@expo-google-fonts/newsreader';
 import { useFonts } from '@expo-google-fonts/nunito';
 import AppLoading from 'expo-app-loading';
@@ -14,12 +14,14 @@ import { routes } from './navigation/routes';
 import SearchResults from './screens/SearchResults';
 import TrendingNews from './screens/TrendingNews';
 import CustomToast from './components/CustomToast';
+import MenuBar from './components/MenuBar';
+import Favourites from './screens/Favourites';
 
 
 export default function App() {
 
   let [fontsLoaded] = useFonts({
-    Nunito_400Regular, Newsreader_400Regular, Newsreader_700Bold, Nunito_800ExtraBold
+    Nunito_400Regular, Newsreader_400Regular, Newsreader_700Bold, Nunito_800ExtraBold, Nunito_600SemiBold_Italic
   });
 
   if (!fontsLoaded) {
@@ -33,6 +35,7 @@ export default function App() {
   return (
     <>
     <NavigationContainer>
+      <StatusBar style="auto" />
       <Stack.Navigator >
         <Stack.Screen name={routes.Home} component={Home} options={{
           headerShown: false
@@ -46,9 +49,14 @@ export default function App() {
         <Stack.Screen name={routes.TrendingNews} component={TrendingNews} options={{
           headerShown: false
         }} />
+         <Stack.Screen name={routes.Favourites} component={Favourites} options={{
+          headerShown: false
+        }} />
       </Stack.Navigator>
+      <MenuBar/>
     </NavigationContainer>
     <CustomToast/>
+    
     </>
   );
 }
