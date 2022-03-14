@@ -4,7 +4,6 @@ import { appelNewsSearchAPI } from '../backend/api';
 import NewsCard from '../components/NewsCard';
 import {  SearchResultsScreenProps } from '../navigation/navigationType';;
 import { stylesCommuns } from '../styles/stylesCommuns';
-import { StatusBar } from 'expo-status-bar';
 import SearchBarAndBell from '../components/SearchBarAndBell';
 import { Article } from '../types/article';
 import { transformArticleToLightVersion } from '../backend/APITools';
@@ -63,7 +62,6 @@ const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
 
     return (
         <>
-            <StatusBar style="auto" />
             <View style={{ ...stylesCommuns.mainContainer, flex: 1 }}>
                 <SearchBarAndBell onSearch={(text) => {
                     searchArticles(text, 1).then((articlesFromAPI)=>setSearchState({

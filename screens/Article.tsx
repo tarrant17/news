@@ -4,12 +4,10 @@ import { AntDesign } from '@expo/vector-icons';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { ArticleScreenProps, RootStackParamList } from '../navigation/navigationType';
 import { LinearGradient } from 'expo-linear-gradient';
-import { StatusBar } from 'expo-status-bar';
 
 const Article = ({ route, navigation }: ArticleScreenProps) => {
     return (
         <>
-        <StatusBar style="auto" />
         <ScrollView bounces={false} alwaysBounceHorizontal={false}
             alwaysBounceVertical={false} style={styles.articleMainContainer}>
             <Image resizeMode="cover"

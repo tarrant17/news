@@ -7,18 +7,21 @@ export type RootStackParamList = {
     Article: { article: Article },
     Test: undefined,
     SearchResults: { keyword: string },
-    TrendingNews: undefined
+    TrendingNews: undefined,
+    Favourites: undefined
 };
 
 export type HomeScreenNavigation = StackNavigationProp<RootStackParamList, 'Home'>
 export type ArticleScreenNavigation = StackNavigationProp<RootStackParamList, 'Article'>
 export type SearchResultsScreenNavigation = StackNavigationProp<RootStackParamList, 'SearchResults'>
 export type TrendingNewsScreenNavigation = StackNavigationProp<RootStackParamList, 'TrendingNews'>
+export type FavouritesScreenNavigation = StackNavigationProp<RootStackParamList, 'Favourites'>
 
 export type HomeScreenRoute = RouteProp<RootStackParamList, 'Home'>
 export type ArticleScreenRoute = RouteProp<RootStackParamList, 'Article'>
 export type SearchResultsScreenRoute = RouteProp<RootStackParamList, 'SearchResults'>
 export type TrendingNewsScreenRoute = RouteProp<RootStackParamList, 'TrendingNews'>
+export type FavouritesScreenRoute = RouteProp<RootStackParamList, 'Favourites'>
 
 export type HomeScreenProps = {
     navigation: HomeScreenNavigation,
@@ -38,4 +41,9 @@ export type SearchResultsScreenProps = {
 export type TrendingNewsScreenProps = {
     navigation: TrendingNewsScreenNavigation,
     route: TrendingNewsScreenRoute
+}
+
+export type FavouritesScreenProps = {
+    navigation: FavouritesScreenNavigation,
+    route: FavouritesScreenRoute
 }

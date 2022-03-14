@@ -3,6 +3,7 @@ export const routes = {
     Article : "Article",
     Test: "Test",
     SearchResults: "SearchResults",
-    TrendingNews: "TrendingNews"
+    TrendingNews: "TrendingNews",
+    Favourites: "Favourites"
   }
   
