@@ -8,7 +8,6 @@ import { StatusBar } from 'expo-status-bar';
 import SearchBarAndBell from '../components/SearchBarAndBell';
 import { Article } from '../types/article';
 import { transformArticleToLightVersion } from '../backend/APITools';
-import { ReloadInstructions } from 'react-native/Libraries/NewAppScreen';
 
 type SearchResultsState = {
     articles : Article[],
