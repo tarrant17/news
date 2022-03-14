@@ -24,8 +24,8 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
 
     const categories = ["Technology", "Healthy", "Finance", "Arts", "Spectacles"]
 
-    let [newsTrendState, setNewsTrendState] = useState({ newsTrend: null, pageNumber: 0 })
-    let [newsFilteredByCategoryState, setNewsFilteredByCategoryState] = useState({ newsFilteredByCategory: null, pageNumber: 0, categorySelected: categories[0] })
+    let [newsTrendState, setNewsTrendState] : [NewsTrendState, any] = useState({ newsTrend: null, pageNumber: 0 })
+    let [newsFilteredByCategoryState, setNewsFilteredByCategoryState]: [newsFilteredByCategoryState, any] = useState({ newsFilteredByCategory: null, pageNumber: 0, categorySelected: categories[0] })
 
     const appelerApiTrendingNewsAndMajState = (ajouterNouvellePageArticleAuState = false) => {
         appelTrendingNewsAPI(ajouterNouvellePageArticleAuState ? newsTrendState.pageNumber : 1)
@@ -69,7 +69,7 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
 
     useEffect(() => {
         if (newsTrendState.newsTrend == null) appelerApiTrendingNewsAndMajState()
-        if (newsFilteredByCategoryState.newsFilteredByCategory == null) appelerApiNewsSearchAPIAndMajState()
+        if (newsFilteredByCategoryState.newsFilteredByCategory == null) appelerApiNewsSearchAPIAndMajState(newsFilteredByCategoryState.categorySelected)
     }, [])
 
     const onSearch = (text) => {
