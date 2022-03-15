@@ -9,7 +9,7 @@ import SearchBarAndBell from '../components/SearchBarAndBell';
 import { Article } from '../types/article';
 import { categories } from '../backend/Categories';
 import LinkSeeAll from '../components/LinkSeeAll';
-import { isVerySmallDevice } from './Tools';
+import { isVeryBigDevice, isVerySmallDevice } from './Tools';
 
 type NewsTrendState = {
     newsTrend: Article[],
@@ -125,6 +125,7 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
     }
 
     const CategoryNewsBloc = () => {
+        let bigDevice = isVeryBigDevice() ? true : false
         return (
             <>
                 <View style={{ marginTop: 21, marginBottom: 21 }}>
@@ -144,14 +145,14 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
                     <LinkSeeAll onPress={() => navigation.navigate('SearchResults', { keyword: newsFilteredByCategoryState.categorySelected })} />
                 </View>
                 <FlatList
-                    horizontal={isVerySmallDevice() ? true : false}
+                    horizontal={!isVeryBigDevice()}
                     onEndReachedThreshold={0.7}
                     onEndReached={() => onEndReachedFlatListNewsByCategory()}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item, index) => Math.random().toString()}
                     data={newsFilteredByCategoryState.newsFilteredByCategory}
-                    renderItem={(item) => <CardWrapper horizontal={isVerySmallDevice() ? true : false} item={item.item} />}
+                    renderItem={(item) => <CardWrapper horizontal={!isVeryBigDevice()} item={item.item} />}
                 />
             </>
         )
