@@ -109,10 +109,9 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
         )
     }
 
-    return (
-        <>
-            <View style={{ ...stylesCommuns.mainContainer, flex: 1 }}>
-                <SearchBarAndBell onSearch={(text) => onSearch(text)} />
+    const TrendingNewsBloc = () => {
+        return (
+            <>
                 <View style={styles.newsTrendWrapper}>
                     <Text style={styles.newsTrendText}>Trending news</Text>
                     <LinkSeeAll onPress={() => navigation.navigate('TrendingNews')} />
@@ -128,6 +127,13 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
                         renderItem={(item) => <NewsTrendCardWrapper item={item.item} />}
                     />
                 </View>
+            </>
+        )
+    }
+
+    const CategoryNewsBloc = () => {
+        return (
+            <>
                 <View style={{ marginTop: 21, marginBottom: 21 }}>
                     <Text style={styles.newsTrendText}>All news</Text>
                 </View>
@@ -152,7 +158,16 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
                     data={newsFilteredByCategoryState.newsFilteredByCategory}
                     renderItem={(item) => <NewsCategoryCardWrapper item={item.item} />}
                 />
+            </>
+        )
+    }
 
+    return (
+        <>
+            <View style={{ ...stylesCommuns.mainContainer, flex: 1 }}>
+                <SearchBarAndBell onSearch={(text) => onSearch(text)} />
+                <TrendingNewsBloc />
+                <CategoryNewsBloc />
             </View>
         </>
     )
