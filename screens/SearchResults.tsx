@@ -70,7 +70,7 @@ const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
                         page: 1
                     }))}
                  } />
-                <View style={{ marginTop: 21, marginBottom: 21 }}>
+                <View style={styles.searchResultTitleWrapper}>
                     <Text style={styles.searchResultsText}>Search results for "{searchState.keyword}"</Text>
                 </View>
                 <FlatList
@@ -94,5 +94,8 @@ const styles = StyleSheet.create({
     searchResultsText: {
         fontSize: 18,
         fontFamily: "Newsreader_700Bold"
+    },
+    searchResultTitleWrapper: {
+        marginBottom: 21
     }
 })
