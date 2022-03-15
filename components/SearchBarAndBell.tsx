@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { TextInput } from 'react-native-gesture-handler'
 import { EvilIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -12,7 +12,7 @@ type Props = {
 
 const SearchBarAndBell = (props: Props) => {
 
-  let valueSearchBar = ""
+  const [valueSearchBar, setValueSearchBar] = useState("")
 
 
   const ajouterRechercheAuxFavoris = (recherche) => {
@@ -33,10 +33,15 @@ const SearchBarAndBell = (props: Props) => {
     }
   }
 
+  const onSubmitRecherche = (value) => {
+    setValueSearchBar("")
+    props.onSearch(value)
+  }
+  
   return (
     <View style={styles.componentWrapper}>
       <View style={styles.searchBarWrapper}>
-        <TextInput style={styles.searchBarTextInput} placeholder='News on request ...' onChangeText={text => valueSearchBar = text} onSubmitEditing={(value) => props.onSearch(value.nativeEvent.text)} />
+        <TextInput style={styles.searchBarTextInput} placeholder='News on request ...' value={valueSearchBar} onChangeText={text => setValueSearchBar(text)} onSubmitEditing={(value) => onSubmitRecherche(valueSearchBar)} />
         <View style={styles.searchBarIconWrapper}>
           <EvilIcons name="search" size={24} color="lightgrey" />
         </View>

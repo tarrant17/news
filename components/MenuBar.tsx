@@ -12,10 +12,10 @@ const MenuBar = (props: Props) => {
   return (
     <View style={styles.menuWrapper}>
         <TouchableOpacity onPress={()=>navigation.navigate(routes.Home)}>
-            <MaterialIcons name="home" size={24} color="white" />
+            <MaterialIcons name="home" size={24} color="red" />
         </TouchableOpacity>
         <TouchableOpacity onPress={()=>navigation.navigate(routes.Favourites)}>
-            <MaterialIcons name="favorite" size={24} color="white" />
+            <MaterialIcons name="favorite" size={24} color="red" />
         </TouchableOpacity>
     </View>
   )
@@ -23,7 +23,6 @@ const MenuBar = (props: Props) => {
 
 const styles = StyleSheet.create({
     menuWrapper: {
-        borderColor: "red",
         borderWidth: 1,
         borderRadius: 50,
         padding: 8,
@@ -35,7 +34,7 @@ const styles = StyleSheet.create({
         width: '40%',
         alignSelf: 'center',
         bottom:0,
-        backgroundColor: 'red'
+        backgroundColor: 'rgba(0,0,0,0.6)'    
         
     }
 })
