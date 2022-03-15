@@ -29,7 +29,7 @@ const Article = ({ route, navigation }: ArticleScreenProps) => {
             </View>
             <View style={styles.backButtonWrapper}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <AntDesign name="leftcircleo" size={32} color="white" />
+                    <AntDesign name="leftcircleo" size={32} color="rgba(255,255,255,0.8)" />
                 </TouchableOpacity>
             </View>
         </ScrollView>
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
         top: 52,
         left: 15,
         opacity: 10,
-        backgroundColor:'grey',
+        backgroundColor:'rgba(0,0,0,0.5)',
         borderRadius:32/2
     },
     imageBackgroundView: {
@@ -67,8 +67,7 @@ const styles = StyleSheet.create({
         width: "75%",
         borderStyle: 'solid',
         borderColor: 'black',
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16,
+        borderRadius: 16,
         backgroundColor: "#dfdfdf",
         paddingVertical: 16,
         paddingHorizontal: 24
