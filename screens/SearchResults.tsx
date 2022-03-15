@@ -33,7 +33,7 @@ const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
     }
 
     useEffect(() => {
-        searchArticles(searchState.keyword, searchState.page).then((articlesFromAPI)=>setSearchState({
+        searchArticles(searchState.keyword, 1).then((articlesFromAPI)=>setSearchState({
             ...searchState,
             articles: articlesFromAPI
         }))
@@ -49,7 +49,7 @@ const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
     }
 
     const onEndReached = () => {
-        searchArticles(searchState.keyword, searchState.page).then((articlesFromAPI)=>ajouterNouvellePageArticleAuState(articlesFromAPI))
+        searchArticles(searchState.keyword, searchState.page + 1).then((articlesFromAPI)=>ajouterNouvellePageArticleAuState(articlesFromAPI))
     }
 
     const NewsCardWrapper = (props) => {
@@ -74,7 +74,7 @@ const SearchResults = ({ route, navigation }: SearchResultsScreenProps) => {
                     <Text style={styles.searchResultsText}>Search results for "{searchState.keyword}"</Text>
                 </View>
                 <FlatList
-                    onEndReachedThreshold={0.7}
+                    onEndReachedThreshold={0.5}
                     onEndReached={()=>onEndReached()}
                     keyExtractor= {(item, index) => Math.random().toString()}
                     horizontal={false}
