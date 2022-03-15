@@ -5,6 +5,7 @@ import { Article } from '../types/article'
 
 type Props = { 
   item: Article,
+  hideDescription: boolean,
   style: object
 }
 
@@ -25,7 +26,7 @@ const NewsCard = (props: Props) => {
               <Text style={styles.cardNewsTitleText}>{props.item.title}</Text>
             </View>
             <View style={styles.cardNewsDescriptionWrapper}>
-              <Text numberOfLines={3} style={styles.cardNewsDescriptionText}>{props.item.description}</Text>
+              {!props.hideDescription && <Text numberOfLines={3} style={styles.cardNewsDescriptionText}>{props.item.description}</Text>}
             </View>
             </View>
           </ImageBackground>

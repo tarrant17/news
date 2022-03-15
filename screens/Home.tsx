@@ -1,4 +1,4 @@
-import { Alert, FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Dimensions, FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { appelNewsSearchAPI, appelTrendingNewsAPI } from '../backend/api';
@@ -9,6 +9,7 @@ import SearchBarAndBell from '../components/SearchBarAndBell';
 import { Article } from '../types/article';
 import { categories } from '../backend/Categories';
 import LinkSeeAll from '../components/LinkSeeAll';
+import { isVerySmallDevice } from './Tools';
 
 type NewsTrendState = {
     newsTrend: Article[],
@@ -21,8 +22,6 @@ type newsFilteredByCategoryState = {
 }
 
 const Home = ({ route, navigation }: HomeScreenProps) => {
-    if (__DEV__) console.log("render HOME")
-
     let [newsTrendState, setNewsTrendState]: [NewsTrendState, any] = useState({ newsTrend: null, pageNumber: 0 })
     let [newsFilteredByCategoryState, setNewsFilteredByCategoryState]: [newsFilteredByCategoryState, any] = useState({ newsFilteredByCategory: null, pageNumber: 0, categorySelected: categories[0] })
 
@@ -83,18 +82,12 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
         appelerApiTrendingNewsAndMajState(true)
     }
 
-    const NewsTrendCardWrapper = (props) => {
+    const CardWrapper = (props) => {
+        let styleNewsCard = (props.horizontal) ? styles.horizontalCardWrapper : styles.verticalCardWrapper
+        if (isVerySmallDevice()) styleNewsCard = {...styleNewsCard, height: 120 }
         return (
             <Pressable onPress={() => navigation.navigate('Article', { article: props.item })}>
-                <NewsCard item={props.item} style={{ marginRight: 5, height: 200, width: 220 }} />
-            </Pressable>
-        )
-    }
-
-    const NewsCategoryCardWrapper = (props) => {
-        return (
-            <Pressable onPress={() => navigation.navigate('Article', { article: props.item })}>
-                <NewsCard item={props.item} style={{ marginBottom: 8, height: 200 }} />
+                <NewsCard hideDescription={isVerySmallDevice()} item={props.item} style={styleNewsCard} />
             </Pressable >
         )
     }
@@ -118,13 +111,13 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
                 </View>
                 <View style={styles.newsTrendFlatList}>
                     <FlatList
+                        horizontal={true}
                         onEndReachedThreshold={0.7}
                         onEndReached={() => onEndReachedFlatListnewsTrend()}
-                        horizontal={true}
                         keyExtractor={() => Math.random().toString()}
                         showsHorizontalScrollIndicator={false}
                         data={newsTrendState.newsTrend}
-                        renderItem={(item) => <NewsTrendCardWrapper item={item.item} />}
+                        renderItem={(item) => <CardWrapper horizontal={true} item={item.item} />}
                     />
                 </View>
             </>
@@ -151,12 +144,14 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
                     <LinkSeeAll onPress={() => navigation.navigate('SearchResults', { keyword: newsFilteredByCategoryState.categorySelected })} />
                 </View>
                 <FlatList
+                    horizontal={isVerySmallDevice() ? true : false}
                     onEndReachedThreshold={0.7}
                     onEndReached={() => onEndReachedFlatListNewsByCategory()}
                     showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
                     keyExtractor={(item, index) => Math.random().toString()}
                     data={newsFilteredByCategoryState.newsFilteredByCategory}
-                    renderItem={(item) => <NewsCategoryCardWrapper item={item.item} />}
+                    renderItem={(item) => <CardWrapper horizontal={isVerySmallDevice() ? true : false} item={item.item} />}
                 />
             </>
         )
@@ -205,5 +200,14 @@ const styles = StyleSheet.create({
     },
     categoriesNewsSeeAllWrapper: {
         alignItems: 'flex-end', marginBottom: 5
+    },
+    verticalCardWrapper: {
+        marginBottom: 8, 
+        height: 200
+    },
+    horizontalCardWrapper: {
+        marginRight: 5, 
+        height: 200, 
+        width: 250
     }
 })
