@@ -12,7 +12,7 @@ type Props = {
 const NewsCard = (props: Props) => {
 
   const defaultUriImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/A_black_image.jpg/640px-A_black_image.jpg"
-  let uriImage = props.item.image.thumbnail ? {uri:props.item.image.thumbnail} : {uri:defaultUriImage}
+  let uriImage = props.item.image.url ? {uri:props.item.image.url} : {uri:defaultUriImage}
 
   return (
         <View style={{...styles.cardNewsWrapper, ...props.style}}>
