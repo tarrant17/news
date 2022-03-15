@@ -8,6 +8,7 @@ import { stylesCommuns } from '../styles/stylesCommuns';
 import SearchBarAndBell from '../components/SearchBarAndBell';
 import { Article } from '../types/article';
 import { categories } from '../backend/Categories';
+import LinkSeeAll from '../components/LinkSeeAll';
 
 type NewsTrendState = {
     newsTrend: Article[],
@@ -22,7 +23,7 @@ type newsFilteredByCategoryState = {
 const Home = ({ route, navigation }: HomeScreenProps) => {
     if (__DEV__) console.log("render HOME")
 
-    let [newsTrendState, setNewsTrendState] : [NewsTrendState, any] = useState({ newsTrend: null, pageNumber: 0 })
+    let [newsTrendState, setNewsTrendState]: [NewsTrendState, any] = useState({ newsTrend: null, pageNumber: 0 })
     let [newsFilteredByCategoryState, setNewsFilteredByCategoryState]: [newsFilteredByCategoryState, any] = useState({ newsFilteredByCategory: null, pageNumber: 0, categorySelected: categories[0] })
 
     const appelerApiTrendingNewsAndMajState = (ajouterNouvellePageArticleAuState = false) => {
@@ -114,10 +115,7 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
                 <SearchBarAndBell onSearch={(text) => onSearch(text)} />
                 <View style={styles.newsTrendWrapper}>
                     <Text style={styles.newsTrendText}>Trending news</Text>
-                    <TouchableOpacity style={styles.newsTrendSeeAllWrapper} onPress={() => navigation.navigate('TrendingNews')}>
-                        <Text style={styles.newsTrendSeeAllText}>See All</Text>
-                        <AntDesign name="arrowright" color="blue" />
-                    </TouchableOpacity>
+                    <LinkSeeAll onPress={() => navigation.navigate('TrendingNews')} />
                 </View>
                 <View style={styles.newsTrendFlatList}>
                     <FlatList
@@ -143,6 +141,9 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
                         renderItem={(item) => <Category label={item.item} />}
                     />
                 </View>
+                <View style={styles.categoriesNewsSeeAllWrapper}>
+                    <LinkSeeAll onPress={() => navigation.navigate('SearchResults', { keyword: newsFilteredByCategoryState.categorySelected })} />
+                </View>
                 <FlatList
                     onEndReachedThreshold={0.7}
                     onEndReached={() => onEndReachedFlatListNewsByCategory()}
@@ -151,6 +152,7 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
                     data={newsFilteredByCategoryState.newsFilteredByCategory}
                     renderItem={(item) => <NewsCategoryCardWrapper item={item.item} />}
                 />
+
             </View>
         </>
     )
@@ -168,20 +170,11 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontFamily: "Newsreader_700Bold"
     },
-    newsTrendSeeAllWrapper: {
-        flexDirection: "row",
-        alignItems: "center"
-    },
-    newsTrendSeeAllText: {
-        color: "blue",
-        fontFamily: "Nunito_400Regular",
-        marginRight: 10
-    },
     newsTrendFlatList: {
         marginTop: 21
     },
     categoriesWrapper: {
-        marginBottom: 21
+        marginBottom: 5
     },
     categorieText: {
         marginHorizontal: 8,
@@ -194,5 +187,8 @@ const styles = StyleSheet.create({
         backgroundColor: "red",
         color: "white",
         borderRadius: 20,
+    },
+    categoriesNewsSeeAllWrapper: {
+        alignItems: 'flex-end', marginBottom: 5
     }
 })
