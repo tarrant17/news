@@ -5,7 +5,7 @@ import { Article } from '../types/article'
 
 type Props = { 
   item: Article,
-  hideDescription: boolean,
+  hideDescription?: boolean,
   style: object
 }
 
