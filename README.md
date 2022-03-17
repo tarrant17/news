@@ -1,34 +1,46 @@
 # News Application
 News is a cross platform application displaying news (obviously :))
 
+- [News Application](#news-application)
+  * [API](#api)
+  * [Functionalities](#functionalities)
+    + [Homepage screen](#homepage-screen)
+    + [Article content screen](#article-content-screen)
+    + [Search results screen](#search-results-screen)
+    + [Trending news screen](#trending-news-screen)
+    + [Favourites search screen](#favourites-search-screen)
+  * [Stack](#stack)
+    + [How to connect with the api](#how-to-connect-with-the-api)
+- [Disclaimer](#disclaimer)
+
 ## API
 The data comes from an API (https://rapidapi.com/contextualwebsearch/api/web-search/). 
 See beyond how to configure it, otherwise you will get dummy data.
 
 ## Functionalities
-### Homepage screen :
+### Homepage screen
 Displays a list of trending news.
 Displays a list of news filtered by category. You can choose the category and data will refresh.
 
 <img src="https://github.com/tarrant17/news/blob/master/screenshots/home_page.jpg" height="600">
 
-### Article content screen :
+### Article content screen
 Display the content of the article with some classic metadatas
 
 <img src="https://github.com/tarrant17/news/blob/master/screenshots/article_content.jpg" height="600">
 
-### Search results screen :
+### Search results screen
 A search bar is displayed on every screen. 
 It allows you to search for any kind of news based on keywords and redirect you to a screen displaying results with an infinite scroll 
 
 <img src="https://github.com/tarrant17/news/blob/master/screenshots/search_results.jpg" height="600">
 
-### Trending news screen :
+### Trending news screen
 All the trending news displayed
 
 <img src="https://github.com/tarrant17/news/blob/master/screenshots/trending_news.jpg" height="600">
 
-### Favourites search screen :
+### Favourites search screen
 You can save your favourites searches (by clicking on the button on the right of the search bar)
 The favourites search screen lists all your favourites search, you can click on any item and it will redirect you to the results.
 You can delete a favourite.
