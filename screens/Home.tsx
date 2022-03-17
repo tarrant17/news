@@ -62,11 +62,13 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
                     })
 
                 } else {
+                    if (newsFilteredByCategoryState.newsFilteredByCategory?.length > 0) 
+                        flatListNewsCategory?.current?.scrollToIndex({ index: 0, animated: false })
                     setNewsFilteredByCategoryState({
                         newsFilteredByCategory: data.value,
                         pageNumber: 1,
                         categorySelected: keyword
-                    }, flatListNewsCategory?.current?.scrollToIndex({ index: 0, animated: false }))
+                    })
                 }
 
             })
