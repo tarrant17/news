@@ -35,15 +35,16 @@ const optionsNewsSearchApi = {
 export async function appelNewsSearchAPI(keyword, pageNumber) {
   
   let options = {
-    ...optionsNewsSearchApi,
-    pageNumber: pageNumber
+    ...optionsNewsSearchApi
   }
+  
   if (keyword) options.params.q = keyword
+  options.params.pageNumber = pageNumber
 
   if (__DEV__) console.log(`appelNewsSearchAPI { keyword : ${keyword}, pageNumber : ${pageNumber}, api mode reel : ${MODE_REAL_DATA_FROM_API} }`)
 
   let response
-  if (MODE_REAL_DATA_FROM_API) {
+  if (MODE_REAL_DATA_FROM_API==='true') {
     response = await axios.request(options)
   } else {
     response = getNewsBouchons()
@@ -54,18 +55,19 @@ export async function appelNewsSearchAPI(keyword, pageNumber) {
 export async function appelTrendingNewsAPI(pageNumber) {
   
   let options = {
-    ...optionsTrendingNewsAPI,
-    page: pageNumber
+    ...optionsTrendingNewsAPI
   }
  
+  options.params.pageNumber = pageNumber
+
   if (__DEV__) console.log(`appelTrendingNewsAPI { pageNumber : ${pageNumber}, api mode reel : ${MODE_REAL_DATA_FROM_API} }`)
 
   let response
-  if (MODE_REAL_DATA_FROM_API) {
+  if (MODE_REAL_DATA_FROM_API==='true') {
     response = await axios.request(options)
   } else {
     response = getNewsBouchons()
   }
-  
+
   return response.data
 }

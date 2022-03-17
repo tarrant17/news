@@ -26,7 +26,8 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
     let [newsFilteredByCategoryState, setNewsFilteredByCategoryState]: [newsFilteredByCategoryState, any] = useState({ newsFilteredByCategory: null, pageNumber: 0, categorySelected: categories[0] })
 
     const appelerApiTrendingNewsAndMajState = (ajouterNouvellePageArticleAuState = false) => {
-        appelTrendingNewsAPI(ajouterNouvellePageArticleAuState ? newsTrendState.pageNumber : 1)
+        if (__DEV__) console.log("appelerApiTrendingNewsAndMajState", newsTrendState.pageNumber + 1)
+        appelTrendingNewsAPI(ajouterNouvellePageArticleAuState ? newsTrendState.pageNumber + 1 : 1)
             .then(data => {
                 if (ajouterNouvellePageArticleAuState) {
                     setNewsTrendState({
@@ -44,7 +45,8 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
     }
 
     const appelerApiNewsSearchAPIAndMajState = (keyword?, ajouterNouvellePageArticleAuState = false) => {
-        appelNewsSearchAPI(keyword, ajouterNouvellePageArticleAuState ? newsFilteredByCategoryState.pageNumber : 1)
+        if (__DEV__) console.log("appelerApiNewsSearchAPIAndMajState", newsFilteredByCategoryState.pageNumber + 1)
+        appelNewsSearchAPI(keyword, ajouterNouvellePageArticleAuState ? newsFilteredByCategoryState.pageNumber + 1 : 1)
             .then(data => {
                 if (ajouterNouvellePageArticleAuState) {
                     setNewsFilteredByCategoryState({
@@ -67,7 +69,7 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
 
     useEffect(() => {
         if (newsTrendState.newsTrend == null) appelerApiTrendingNewsAndMajState()
-        if (newsFilteredByCategoryState.newsFilteredByCategory == null) appelerApiNewsSearchAPIAndMajState(newsFilteredByCategoryState.categorySelected)
+        if (newsFilteredByCategoryState.newsFilteredByCategory == null) setTimeout(()=>appelerApiNewsSearchAPIAndMajState(newsFilteredByCategoryState.categorySelected), 1500)
     }, [])
 
     const onSearch = (text) => {
