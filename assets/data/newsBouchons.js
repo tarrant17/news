@@ -19,7 +19,7 @@ const generateRandomImage = () => {
 export const getNewsBouchons = (pageNumber) => {
    newsBouchons.data.value.forEach(element => {
       let randomImage = generateRandomImage()
-      element.title= 'Page : ' + String.toString(pageNumber) + ' ' + generateStringRandom(10)
+      element.title= 'Page : ' + pageNumber + ' ' + generateStringRandom(10)
       element.image.thumbnail = randomImage
       element.image.url = randomImage
    });
