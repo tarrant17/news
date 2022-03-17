@@ -1,10 +1,9 @@
 import axios from "axios";
 import { getNewsBouchons } from "../assets/data/newsBouchons";
-import { API_KEY } from "@env"
-export const BOUCHONNER_APPEL_API = true
+import { API_KEY, MODE_REAL_DATA_FROM_API } from "@env"
 
 
-const  headers = {
+const headers = {
   'x-rapidapi-host': 'contextualwebsearch-websearch-v1.p.rapidapi.com',
   'x-rapidapi-key': API_KEY
 }
@@ -13,9 +12,8 @@ const options = {
   method: 'GET',
   url: 'https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/search/',
   params: {
-    pageNumber: '1',
     pageSize: '10',
-    autoCorrect: 'true',
+    autoCorrect: 'false',
     fromPublishedDate: 'null',
     toPublishedDate: 'null',
     withThumbnails: 'true',
@@ -35,38 +33,42 @@ const optionsNewsSearchApi = {
 };
 
 export async function appelNewsSearchAPI(keyword, pageNumber) {
-  
+
   let options = {
-    ...optionsNewsSearchApi,
-    pageNumber: pageNumber
+    ...optionsNewsSearchApi
   }
+
+  options.params.pageNumber = pageNumber.toString()
   if (keyword) options.params.q = keyword
 
-  if (__DEV__) console.log("appel appelNewsSearchAPI", keyword, pageNumber)
+  if (__DEV__) console.log("api.js appelNewsSearchAPI", keyword, pageNumber, MODE_REAL_DATA_FROM_API)
 
   let response
-  if (!BOUCHONNER_APPEL_API) {
+  if (MODE_REAL_DATA_FROM_API === 'true') {
     response = await axios.request(options)
   } else {
-    response = getNewsBouchons()
+    response = getNewsBouchons(pageNumber)
   }
+  
   return response.data
 }
 
 export async function appelTrendingNewsAPI(pageNumber) {
-  
+
   let options = {
-    ...optionsTrendingNewsAPI,
-    page: pageNumber
+    ...optionsTrendingNewsAPI
   }
- 
-  if (__DEV__) console.log("appel appelTrendingNewsAPI", "PageNumber", pageNumber)
+
+  options.params.pageNumber = pageNumber.toString()
+
+  if (__DEV__) console.log("api.js appelTrendingNewsAPI", pageNumber, MODE_REAL_DATA_FROM_API)
 
   let response
-  if (!BOUCHONNER_APPEL_API) {
-    await axios.request(options)
+  if (MODE_REAL_DATA_FROM_API === 'true') {
+    response = await axios.request(options)
   } else {
-    response = getNewsBouchons()
+    response = getNewsBouchons(pageNumber)
   }
+  
   return response.data
 }
