@@ -1,7 +1,7 @@
 
-export const generateStringRandom = () => {
+export const generateStringRandom = (longueur=2) => {
    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-   const length = 2;
+   const length = longueur;
    let randomStr = "";
 
    for (let i = 0; i < length; i++) {
@@ -16,9 +16,10 @@ const generateRandomImage = () => {
    return "https://picsum.photos/800/600" + "/?nocache=" + generateStringRandom()
 }
 
-export const getNewsBouchons = () => {
+export const getNewsBouchons = (pageNumber) => {
    newsBouchons.data.value.forEach(element => {
       let randomImage = generateRandomImage()
+      element.title= 'Page : ' + String.toString(pageNumber) + ' ' + generateStringRandom(10)
       element.image.thumbnail = randomImage
       element.image.url = randomImage
    });
