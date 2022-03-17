@@ -6,22 +6,37 @@ The data comes from an API (https://rapidapi.com/contextualwebsearch/api/web-sea
 See beyond how to configure it, otherwise you will get dummy data.
 
 ## Functionalities
-- Homepage screen :
+### Homepage screen :
 Displays a list of trending news.
 Displays a list of news filtered by category. You can choose the category and data will refresh.
-- Article content screen :
+
+<img src="https://github.com/tarrant17/news/blob/master/screenshots/home_page.jpg" height="600">
+
+### Article content screen :
 Display the content of the article with some classic metadatas
-- Search results screen :
+
+<img src="https://github.com/tarrant17/news/blob/master/screenshots/article_content.jpg" height="600">
+
+### Search results screen :
 A search bar is displayed on every screen. 
 It allows you to search for any kind of news based on keywords and redirect you to a screen displaying results with an infinite scroll 
-- Favourites search screen :
+
+<img src="https://github.com/tarrant17/news/blob/master/screenshots/search_results.jpg" height="600">
+
+### Trending news screen :
+All the trending news displayed
+
+<img src="https://github.com/tarrant17/news/blob/master/screenshots/trending_news.jpg" height="600">
+
+### Favourites search screen :
 You can save your favourites searches (by clicking on the button on the right of the search bar)
 The favourites search screen lists all your favourites search, you can click on any item and it will redirect you to the results.
 You can delete a favourite.
 
+<img src="https://github.com/tarrant17/news/blob/master/screenshots/favourites_search.jpg" height="600">
+
 ## Stack
 It's developped in React Native with Expo. I'm also using TypeScript.
-
 
 ### How to connect with the api
 By default all data in the app is hard coded. 
