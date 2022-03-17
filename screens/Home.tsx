@@ -1,5 +1,5 @@
 import { Alert, Dimensions, FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { appelNewsSearchAPI, appelTrendingNewsAPI } from '../backend/api';
 import NewsCard from '../components/NewsCard';
@@ -25,8 +25,13 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
     let [newsTrendState, setNewsTrendState]: [NewsTrendState, any] = useState({ newsTrend: null, pageNumber: 0 })
     let [newsFilteredByCategoryState, setNewsFilteredByCategoryState]: [newsFilteredByCategoryState, any] = useState({ newsFilteredByCategory: null, pageNumber: 0, categorySelected: categories[0] })
 
+    
+    const flatListNewsCategory = useRef()
+
     const appelerApiTrendingNewsAndMajState = (ajouterNouvellePageArticleAuState = false) => {
-        appelTrendingNewsAPI(ajouterNouvellePageArticleAuState ? newsTrendState.pageNumber : 1)
+        if (__DEV__) console.log('appelerApiTrendingNewsAndMajState')
+       
+        appelTrendingNewsAPI(ajouterNouvellePageArticleAuState ? newsTrendState.pageNumber + 1 : 1)
             .then(data => {
                 if (ajouterNouvellePageArticleAuState) {
                     setNewsTrendState({
@@ -44,7 +49,10 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
     }
 
     const appelerApiNewsSearchAPIAndMajState = (keyword?, ajouterNouvellePageArticleAuState = false) => {
-        appelNewsSearchAPI(keyword, ajouterNouvellePageArticleAuState ? newsFilteredByCategoryState.pageNumber : 1)
+
+        if (__DEV__) console.log('appelerApiNewsSearchAPIAndMajState')
+
+        appelNewsSearchAPI(keyword, ajouterNouvellePageArticleAuState ? newsFilteredByCategoryState.pageNumber + 1 : 1)
             .then(data => {
                 if (ajouterNouvellePageArticleAuState) {
                     setNewsFilteredByCategoryState({
@@ -58,7 +66,7 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
                         newsFilteredByCategory: data.value,
                         pageNumber: 1,
                         categorySelected: keyword
-                    })
+                    }, flatListNewsCategory?.current?.scrollToIndex({ index: 0, animated: false }))
                 }
 
             })
@@ -67,7 +75,7 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
 
     useEffect(() => {
         if (newsTrendState.newsTrend == null) appelerApiTrendingNewsAndMajState()
-        if (newsFilteredByCategoryState.newsFilteredByCategory == null) appelerApiNewsSearchAPIAndMajState(newsFilteredByCategoryState.categorySelected)
+        if (newsFilteredByCategoryState.newsFilteredByCategory == null) setTimeout(()=>appelerApiNewsSearchAPIAndMajState(newsFilteredByCategoryState.categorySelected), 1500)
     }, [])
 
     const onSearch = (text) => {
@@ -84,7 +92,7 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
 
     const CardWrapper = (props) => {
         let styleNewsCard = (props.horizontal) ? styles.horizontalCardWrapper : styles.verticalCardWrapper
-        if (isVerySmallDevice()) styleNewsCard = {...styleNewsCard, height: 120 }
+        if (isVerySmallDevice()) styleNewsCard = { ...styleNewsCard, height: 120 }
         return (
             <Pressable onPress={() => navigation.navigate('Article', { article: props.item })}>
                 <NewsCard hideDescription={isVerySmallDevice()} item={props.item} style={styleNewsCard} />
@@ -102,9 +110,11 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
         )
     }
 
-    const TrendingNewsBloc = () => {
-        return (
-            <>
+
+    return (
+        <>
+            <View style={{ ...stylesCommuns.mainContainer, flex: 1 }}>
+                <SearchBarAndBell onSearch={(text) => onSearch(text)} />
                 <View style={styles.newsTrendWrapper}>
                     <Text style={styles.newsTrendText}>Trending news</Text>
                     <LinkSeeAll onPress={() => navigation.navigate('TrendingNews')} />
@@ -112,7 +122,7 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
                 <View style={styles.newsTrendFlatList}>
                     <FlatList
                         horizontal={true}
-                        onEndReachedThreshold={0.7}
+                        onEndReachedThreshold={0.4}
                         onEndReached={() => onEndReachedFlatListnewsTrend()}
                         keyExtractor={() => Math.random().toString()}
                         showsHorizontalScrollIndicator={false}
@@ -120,14 +130,6 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
                         renderItem={(item) => <CardWrapper horizontal={true} item={item.item} />}
                     />
                 </View>
-            </>
-        )
-    }
-
-    const CategoryNewsBloc = () => {
-        let bigDevice = isVeryBigDevice() ? true : false
-        return (
-            <>
                 <View style={{ marginTop: 21, marginBottom: 21 }}>
                     <Text style={styles.newsTrendText}>All news</Text>
                 </View>
@@ -145,25 +147,16 @@ const Home = ({ route, navigation }: HomeScreenProps) => {
                     <LinkSeeAll onPress={() => navigation.navigate('SearchResults', { keyword: newsFilteredByCategoryState.categorySelected })} />
                 </View>
                 <FlatList
-                    horizontal={!isVeryBigDevice()}
-                    onEndReachedThreshold={0.7}
+                    ref={flatListNewsCategory}
+                    horizontal={isVerySmallDevice()}
+                    onEndReachedThreshold={0.4}
                     onEndReached={() => onEndReachedFlatListNewsByCategory()}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item, index) => Math.random().toString()}
                     data={newsFilteredByCategoryState.newsFilteredByCategory}
-                    renderItem={(item) => <CardWrapper horizontal={!isVeryBigDevice()} item={item.item} />}
+                    renderItem={(item) => <CardWrapper horizontal={isVerySmallDevice()} item={item.item} />}
                 />
-            </>
-        )
-    }
-
-    return (
-        <>
-            <View style={{ ...stylesCommuns.mainContainer, flex: 1 }}>
-                <SearchBarAndBell onSearch={(text) => onSearch(text)} />
-                <TrendingNewsBloc />
-                <CategoryNewsBloc />
             </View>
         </>
     )
@@ -203,12 +196,12 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end', marginBottom: 5
     },
     verticalCardWrapper: {
-        marginBottom: 8, 
+        marginBottom: 8,
         height: 200
     },
     horizontalCardWrapper: {
-        marginRight: 5, 
-        height: 200, 
+        marginRight: 5,
+        height: 200,
         width: 250
     }
 })
