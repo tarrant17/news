@@ -1,6 +1,10 @@
 # News Application
 News is a cross platform application displaying news (obviously :))
 
+## API
+The data comes from an API (https://rapidapi.com/contextualwebsearch/api/web-search/). 
+See beyond how to configure it, otherwise you will get dummy data.
+
 ## Functionalities
 - Homepage screen :
 Displays a list of trending news.
@@ -18,8 +22,6 @@ You can delete a favourite.
 ## Stack
 It's developped in React Native with Expo. I'm also using TypeScript.
 
-## API
-The data comes from an API (https://rapidapi.com/contextualwebsearch/api/web-search/). 
 
 ### How to connect with the api
 By default all data in the app is hard coded. 
@@ -31,3 +33,4 @@ Steps to go on real data :
 
 # Disclaimer
 It is still in development and it has only a purpose of training and adding stuff to my portfolio.
+With dummy data (no api connected), images are not displaying well
