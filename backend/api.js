@@ -1,8 +1,6 @@
 import axios from "axios";
 import { getNewsBouchons } from "../assets/data/newsBouchons";
-import { API_KEY } from "@env"
-export const BOUCHONNER_APPEL_API = true
-
+import { API_KEY, MODE_REAL_DATA_FROM_API } from "@env"
 
 const  headers = {
   'x-rapidapi-host': 'contextualwebsearch-websearch-v1.p.rapidapi.com',
@@ -42,10 +40,10 @@ export async function appelNewsSearchAPI(keyword, pageNumber) {
   }
   if (keyword) options.params.q = keyword
 
-  if (__DEV__) console.log("appel appelNewsSearchAPI", keyword, pageNumber)
+  if (__DEV__) console.log(`appelNewsSearchAPI { keyword : ${keyword}, pageNumber : ${pageNumber}, api mode reel : ${MODE_REAL_DATA_FROM_API} }`)
 
   let response
-  if (!BOUCHONNER_APPEL_API) {
+  if (MODE_REAL_DATA_FROM_API) {
     response = await axios.request(options)
   } else {
     response = getNewsBouchons()
@@ -60,13 +58,14 @@ export async function appelTrendingNewsAPI(pageNumber) {
     page: pageNumber
   }
  
-  if (__DEV__) console.log("appel appelTrendingNewsAPI", "PageNumber", pageNumber)
+  if (__DEV__) console.log(`appelTrendingNewsAPI { pageNumber : ${pageNumber}, api mode reel : ${MODE_REAL_DATA_FROM_API} }`)
 
   let response
-  if (!BOUCHONNER_APPEL_API) {
-    await axios.request(options)
+  if (MODE_REAL_DATA_FROM_API) {
+    response = await axios.request(options)
   } else {
     response = getNewsBouchons()
   }
+  
   return response.data
 }
