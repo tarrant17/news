@@ -1,5 +1,5 @@
 # News Application
-News is a cross platform application displaying news (obviously :))
+News is a cross platform application using React Native, the purpose is to display news (obviously :))
 
 - [News Application](#news-application)
   * [API](#api)
